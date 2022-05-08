@@ -1,4 +1,4 @@
-# luna_script
+# Luna script
 The programming language for https://luna.rovi.me custom commands
 > There will be full documentation in the future and at the moment it is quite simple.
 
