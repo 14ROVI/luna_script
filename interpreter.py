@@ -1,5 +1,3 @@
-import asyncio
-
 from . import RTResult, RTError, Context, TokenType, Keywords, SymbolTable
 
 from .types import Number, String, List, Function
@@ -9,7 +7,6 @@ from .types import Number, String, List, Function
 class Interpreter:
     @classmethod
     async def visit(cls, node, context):
-        await asyncio.sleep(0)
         method_name = f'visit_{type(node).__name__}'
         method = getattr(cls, method_name, cls.no_visit_method)
         res = await method(node, context)

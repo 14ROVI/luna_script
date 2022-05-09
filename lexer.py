@@ -12,6 +12,7 @@ class Lexer:
         self.text = text
         self.pos = Position(-1, 0, -1, fn, text)
         self.current_char = None
+        self.save_newlines = 0
         self.advance()
 
     def advance(self):
@@ -32,8 +33,14 @@ class Lexer:
             elif self.current_char in LETTERS:
                 tokens.append(self.make_identifier())
             elif self.current_char in SYMBOL_TO_TOKENS:
-                tokens.append(
-                    Token(SYMBOL_TO_TOKENS[self.current_char], pos_start=self.pos))
+                if (self.current_char not in NEW_LINES) or (self.save_newlines == 0):
+                    tokens.append(Token(SYMBOL_TO_TOKENS[self.current_char], pos_start=self.pos))
+                    if tokens[-2].type == TokenType.TT_NEWLINE:
+                        tokens.pop(-2)
+                    if self.current_char == "(":
+                        self.save_newlines += 1
+                    elif self.current_char == ")":
+                        self.save_newlines -= 1
                 self.advance()
             elif self.current_char == '"':
                 tokens.append(self.make_string())
