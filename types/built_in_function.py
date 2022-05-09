@@ -151,6 +151,11 @@ class BuiltInFunction(BaseFunction):
         arg = exec_ctx.symbol_table.get("arg")
         return RTResult().success(String(str(arg)))
     execute_str.arg_names = ["arg"]
+    
+    def execute_embed(self, exec_ctx):
+        from . import Embed
+        return RTResult().success(Embed(None))
+    execute_embed.arg_names = []
 
 
 BuiltInFunction.is_number = BuiltInFunction("is_number")
@@ -161,3 +166,4 @@ BuiltInFunction.append = BuiltInFunction("append")
 BuiltInFunction.pop = BuiltInFunction("pop")
 BuiltInFunction.len = BuiltInFunction("len")
 BuiltInFunction.str = BuiltInFunction("str")
+BuiltInFunction.embed = BuiltInFunction("embed")

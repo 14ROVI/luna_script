@@ -64,7 +64,7 @@ class Guild(Value):
                 exec_ctx
             ))
 
-        member = await self.value.get_member(member_id)
+        member = self.value.get_member(member_id.value)
         if not member:
             member = await self.value.query_members(user_ids=[member_id.value])
             member = member[0] if len(member) > 0 else None
@@ -86,7 +86,7 @@ class Guild(Value):
                 exec_ctx
             ))
 
-        channel = await self.value.get_channel(channel_id)
+        channel = self.value.get_channel(channel_id.value)
         if isinstance(channel, DiscordTextChannel):
             return RTResult().success(TextChannel(channel))
         elif isinstance(channel, DiscordVoiceChannel):
@@ -107,7 +107,7 @@ class Guild(Value):
                 exec_ctx
             ))
 
-        role = await self.value.get_role(role_id)
+        role = self.value.get_role(role_id.value)
         if role is not None:
             return RTResult().success(Role(role))
         else:

@@ -67,7 +67,7 @@ class Interaction(Value):
                     "Arguments must be Strings or Embeds",
                     exec_ctx
                 ))
-
+                
         await self.value.send(content=text, embed=embed)
         return RTResult().success(Number.null)
     respond.arg_names = ["args"]

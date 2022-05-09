@@ -269,23 +269,34 @@ class Parser:
         return self.power()
 
     def power(self):
-        return self.bin_op(self.call, (TokenType.TT_POW, ), self.factor)
+        res = ParseResult()
+        call = res.register(self.call())
+        if res.error: return res
+        
+        child = call
+        while self.current_tok.type == TokenType.TT_DOT:
+            res.register_advancement()
+            self.advance()
+
+            child_ = res.register(self.power())
+            if res.error: return res
+
+            child.child = child_
+            child = child_
+            
+        while self.current_tok.type == TokenType.TT_POW:
+            res.register_advancement()
+            self.advance()
+            right = res.register(self.factor())
+            if res.error: return res
+            call = BinOpNode(call, TokenType.TT_POW, right)
+
+        return res.success(call)
 
     def call(self):
         res = ParseResult()
         atom = res.register(self.atom())
         if res.error: return res
-        
-        child = atom
-        while self.current_tok.type == TokenType.TT_DOT:
-            res.register_advancement()
-            self.advance()
-
-            child_ = res.register(self.call())
-            if res.error: return res
-
-            child.child = child_
-            child = child_
 
         if self.current_tok.type == TokenType.TT_LPAREN:
             res.register_advancement()

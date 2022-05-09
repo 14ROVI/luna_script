@@ -174,7 +174,7 @@ class Lexer:
     def skip_comment(self):
         self.advance()
 
-        while self.current_char not in NEW_LINES:
+        while self.current_char is not None and self.current_char not in NEW_LINES:
             self.advance()
 
         self.advance()
