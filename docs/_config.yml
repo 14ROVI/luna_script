@@ -1,1 +1,9 @@
 remote_theme: just-the-docs/just-the-docs
+
+title: Luna script
+tagline: A Programming language for the Luna Discord bot&#39;s custom commands
+description: A Programming language for the Luna Discord bot&#39;s custom commands
+tags:
+  - Python
+  - Custom Language
+  - Discord
