@@ -68,6 +68,7 @@ Represents a field of an embed.
 | `name` | [`String`](string.md) |
 | `value` | [`String`](string.md) |
 | `inline` | [`Number`](number.md) |
+
 `inline` is either true or false (1 or 0)
 
 
