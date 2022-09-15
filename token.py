@@ -61,7 +61,7 @@ SYMBOL_TO_TOKENS = {
 
 
 class Keywords(Enum):
-    KW_VAR = 'var'
+    KW_VAR = 'let'
     KW_AND = 'and'
     KW_OR = 'or'
     KW_NOT = 'not'

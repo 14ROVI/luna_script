@@ -33,7 +33,10 @@ class Guild(Value):
             self.symbol_table.set("owner", Member(self.value.owner))
         self.symbol_table.set("get_member", ClassFunction(self, self.get_member))
         self.symbol_table.set("get_channel", ClassFunction(self, self.get_channel))
+        self.symbol_table.set("get_thread", ClassFunction(self, self.get_thread))
         self.symbol_table.set("get_role", ClassFunction(self, self.get_role))
+        self.symbol_table.set("ban", ClassFunction(self, self.ban))
+        self.symbol_table.set("kick", ClassFunction(self, self.kick))
         
         
     def is_true(self):
@@ -96,6 +99,25 @@ class Guild(Value):
     get_channel.arg_names = ["id"]
     
     
+    async def get_thread(self, exec_ctx):
+        from . import TextChannel, VoiceChannel
+        channel_id = exec_ctx.symbol_table.get("id")
+
+        if not isinstance(channel_id, Number):
+            return RTResult().failure(RTError(
+                self.pos_start, self.pos_end,
+                "Argument must be a number",
+                exec_ctx
+            ))
+
+        channel = self.value.get_thread(channel_id.value)
+        if channel is not None:
+            return RTResult().success(TextChannel(channel))
+        else:
+            return RTResult().success(Number.null)
+    get_thread.arg_names = ["id"]
+    
+    
     async def get_role(self, exec_ctx):
         from . import Role
         role_id = exec_ctx.symbol_table.get("id")
@@ -113,3 +135,49 @@ class Guild(Value):
         else:
             return RTResult().success(Number.null)
     get_role.arg_names = ["id"]
+    
+    
+    async def ban(self, exec_ctx):
+        if not exec_ctx.register_api_interaction():
+            return RTResult().failure(RTError(
+                self.pos_start, self.pos_end,
+                "Can't use more than 6 API interactions in a command!",
+                exec_ctx
+            ))
+            
+        from . import Member
+        member = exec_ctx.symbol_table.get("member")
+
+        if not isinstance(member, Member):
+            return RTResult().failure(RTError(
+                self.pos_start, self.pos_end,
+                "Argument must be a member",
+                exec_ctx
+            ))
+
+        await member.value.ban(reason="custom command invoked ban")
+        return RTResult().success(Number.null)
+    ban.arg_names = ["member"]
+    
+    
+    async def kick(self, exec_ctx):
+        if not exec_ctx.register_api_interaction():
+            return RTResult().failure(RTError(
+                self.pos_start, self.pos_end,
+                "Can't use more than 6 API interactions in a command!",
+                exec_ctx
+            ))
+            
+        from . import Member
+        member = exec_ctx.symbol_table.get("member")
+
+        if not isinstance(member, Member):
+            return RTResult().failure(RTError(
+                self.pos_start, self.pos_end,
+                "Argument must be a member",
+                exec_ctx
+            ))
+
+        await member.value.kick(reason="custom command invoked kick")
+        return RTResult().success(Number.null)
+    kick.arg_names = ["member"]

@@ -437,7 +437,7 @@ class Parser:
                 return res.failure(
                     InvalidSyntaxError(
                         self.current_tok.pos_start, self.current_tok.pos_end,
-                        "Expected ']', 'VAR', 'IF', 'FOR', 'WHILE', 'FUN', int, float, identifier, '+', '-', '(', '[' or 'NOT'"
+                        "Expected ']', 'let', 'if', 'for', 'while', int, float, identifier, '+', '-', '(', '[' or 'NOT'"
                     ))
 
             while self.current_tok.type == TokenType.TT_COMMA:
