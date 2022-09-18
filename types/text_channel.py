@@ -1,8 +1,4 @@
-from datetime import timedelta
-from discord import (
-    app_commands,
-    TextChannel as DiscordTextChannel,
-)
+from discord import TextChannel as DiscordTextChannel
 
 from .. import RTError, RTResult
 
@@ -83,7 +79,7 @@ class TextChannel(Value):
         bot = exec_ctx.get_bot()
         interaction = exec_ctx.get_interaction()
         args = exec_ctx.symbol_table.get("args").elements
-        args = [arg.value for arg in args]
+        args = [None if arg == Number.null else arg.value for arg in args]
         command_name = args[0]
         args = args[1:]
 
@@ -95,16 +91,16 @@ class TextChannel(Value):
             ))
         
         invoked_command = None
+        command_name = command_name.strip()
         for command in bot.tree.walk_commands():
-            if isinstance(command, app_commands.Command):
-                full_name = command.name
-                parent = command.parent
-                while parent is not None:
-                    full_name = parent.name + " " + full_name
-                    parent = parent.parent
-                if full_name == command_name:
-                    invoked_command = command
-                    break
+            full_name = command.name
+            parent = command.parent
+            while parent is not None:
+                full_name = parent.name + " " + full_name
+                parent = parent.parent
+            if full_name == command_name:
+                invoked_command = command
+                break
         
         if invoked_command is None:
             return RTResult().failure(RTError(
@@ -113,14 +109,15 @@ class TextChannel(Value):
                 exec_ctx
             ))
         
-        if interaction.channel != self.value:
-            interaction.expires_at -= timedelta(minutes=15)
-            interaction.channel = self.value
-        
-        if invoked_command.parent:
-            await invoked_command.callback(invoked_command.parent, interaction, *args)
+        if self.value != interaction.channel:
+            interaction.extras["channel"] = self.value
+
+        if invoked_command.binding is not None:
+            await invoked_command.callback(invoked_command.binding, interaction, *args)
         else:
             await invoked_command.callback(interaction, *args)
         
+        interaction.extras["channel"] = None
+
         return RTResult().success(Number.null)
     run_command.arg_names = ["args"]

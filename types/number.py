@@ -6,7 +6,10 @@ from . import Value
 class Number(Value):
     def __init__(self, value):
         super().__init__()
-        self.value = value
+        if isinstance(value, float) and value.is_integer():
+            self.value = int(value)
+        else:
+            self.value = value
 
     def added_to(self, other):
         if isinstance(other, Number):

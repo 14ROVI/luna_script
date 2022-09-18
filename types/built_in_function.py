@@ -156,6 +156,20 @@ class BuiltInFunction(BaseFunction):
         from . import Embed
         return RTResult().success(Embed(None))
     execute_embed.arg_names = []
+    
+    def execute_choice(self, exec_ctx):
+        from . import Choice
+        arg = exec_ctx.symbol_table.get("arg")
+        
+        if not isinstance(arg, Number):
+            return RTResult().failure(RTError(
+                self.pos_start, self.pos_end,
+                "Argument must be number",
+                exec_ctx
+            ))
+        
+        return RTResult().success(Choice(arg.value))
+    execute_choice.arg_names = ["arg"]
 
 
 BuiltInFunction.is_number = BuiltInFunction("is_number")
@@ -167,3 +181,4 @@ BuiltInFunction.pop = BuiltInFunction("pop")
 BuiltInFunction.len = BuiltInFunction("len")
 BuiltInFunction.str = BuiltInFunction("str")
 BuiltInFunction.embed = BuiltInFunction("embed")
+BuiltInFunction.choice = BuiltInFunction("choice")

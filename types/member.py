@@ -20,7 +20,7 @@ class Member(Value):
         self.symbol_table.set("discriminator", String(self.value.discriminator))
         self.symbol_table.set("nickname", String(self.value.nick or self.value.name))
         self.symbol_table.set("mention", String(self.value.mention))
-        self.symbol_table.set("avatar_url", String(self.value.avatar.url))
+        self.symbol_table.set("avatar_url", String(self.value.display_avatar.url))
         self.symbol_table.set("bot", Number.true if self.value.bot else Number.false)
         self.symbol_table.set("joined_at", Number(self.value.joined_at.timestamp))
         self.symbol_table.set("created_at", Number(self.value.created_at.timestamp))
@@ -43,7 +43,7 @@ class Member(Value):
         return copy
 
     def __str__(self):
-        return self.value.content
+        return str(self.value)
 
     def __repr__(self):
         return f"<Member id={self.value.id}>"
@@ -108,7 +108,7 @@ class Member(Value):
             ))
 
         for member_role in self.value.roles:
-            if member_role.id == role.id:
+            if member_role.id == role.value.id:
                 return RTResult().success(Number.true)
         return RTResult().success(Number.false)
     has_role.arg_names = ["role"]

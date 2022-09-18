@@ -4,6 +4,8 @@ from discord import (
     VoiceChannel as DiscordVoiceChannel,
 )
 
+from luna_script.types.class_property import ClassProperty
+
 from .. import RTError, RTResult
 
 from . import ClassFunction, Value, String, Number, List
@@ -29,8 +31,9 @@ class Guild(Value):
             if isinstance(channel, (DiscordTextChannel, DiscordVoiceChannel))
         ))
         self.symbol_table.set("owner_id", Number(self.value.owner_id))
+        self.symbol_table.set("owner", Number.null)
         if self.value.owner is not None:
-            self.symbol_table.set("owner", Member(self.value.owner))
+            self.symbol_table.set("owner", ClassProperty(lambda _: Member(self.value.owner)))
         self.symbol_table.set("get_member", ClassFunction(self, self.get_member))
         self.symbol_table.set("get_channel", ClassFunction(self, self.get_channel))
         self.symbol_table.set("get_thread", ClassFunction(self, self.get_thread))

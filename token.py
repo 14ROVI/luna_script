@@ -3,7 +3,7 @@ from enum import Enum
 
 DIGITS = '0123456789'
 LETTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-SKIP_LETTERS = ' \t'
+SKIP_LETTERS = ' \t\r'
 NEW_LINES = ';\n'
 COMMENT_SYMBOL = '#'
 LETTERS_DIGITS = LETTERS + DIGITS

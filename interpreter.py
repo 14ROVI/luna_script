@@ -10,7 +10,7 @@ class Interpreter:
         method_name = f'visit_{type(node).__name__}'
         method = getattr(cls, method_name, cls.no_visit_method)
         res = await method(node, context)
-        
+
         if node.child:
             new_context = Context(type(res.value).__name__, context, node.child.pos_start)
             if res.value:

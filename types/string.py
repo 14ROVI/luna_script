@@ -9,6 +9,10 @@ class String(Value):
         self.value: str = value
         
         self.symbol_table.set("startswith", ClassFunction(self, self.startswith))
+        self.symbol_table.set("endswith", ClassFunction(self, self.endswith))
+        self.symbol_table.set("contains", ClassFunction(self, self.contains))
+        self.symbol_table.set("upper", ClassFunction(self, self.upper))
+        self.symbol_table.set("lower", ClassFunction(self, self.lower))
 
     def added_to(self, other):
         if isinstance(other, String):

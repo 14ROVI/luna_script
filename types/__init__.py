@@ -2,6 +2,7 @@ from .value import Value
 
 from .base_function import BaseFunction
 from .class_function import ClassFunction
+from .class_property import ClassProperty
 
 from .number import Number
 from .string import String
@@ -12,6 +13,7 @@ from .built_in_function import BuiltInFunction
 
 
 from .embed import Embed
+from .choice import Choice
 from .message import Message
 
 from .text_channel import TextChannel
